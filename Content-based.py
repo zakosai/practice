@@ -4,8 +4,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfTransformer
 import numpy as np
 from sklearn.linear_model import Ridge
-from sklearn import linear_model
-
+import time
 
 def getDataInfo():
     #Reading users file:
@@ -72,6 +71,8 @@ def evaluate(Yhat, rates, W, b, n_users):
 
 def main():
     X0, X_train_counts, rate_train, n_users, rate_test = getDataInfo()
+    start = time.time()
+
     transformer = TfidfTransformer(smooth_idf=True, norm='l2')
     tfidf = transformer.fit_transform(X_train_counts.tolist()).toarray()
 
@@ -91,7 +92,11 @@ def main():
     Yhat = tfidf.dot(W) + b
 
     print('RMSE for training:', evaluate(Yhat, rate_train, W, b, n_users))
+    print(time.time() - start)
+    start = time.time()
     print('RMSE for test    :', evaluate(Yhat, rate_test, W, b, n_users))
+
+    print(time.time()-start)
 
     #test with 1 user
     n = 10

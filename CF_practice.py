@@ -2,6 +2,7 @@ __author__ = 'linh'
 import pandas as pd
 from CF import CF
 import numpy as np
+import time
 
 r_cols = ['user_id', 'movie_id', 'rating', 'unix_timestamp']
 
@@ -15,9 +16,12 @@ rate_test = ratings_test.as_matrix()
 rate_train[:, :2] -= 1
 rate_test[:, :2] -= 1
 
+start = time.time()
 rs = CF(rate_train, k = 10, uuCF = 0)
 rs.fit()
+print(time.time() - start)
 
+start = time.time()
 n_tests = rate_test.shape[0]
 SE = 0 # squared error
 for n in range(0,n_tests):
@@ -26,3 +30,4 @@ for n in range(0,n_tests):
 
 RMSE = np.sqrt(SE/n_tests)
 print('item-item CF, RMSE =', RMSE)
+print(time.time()-start)
